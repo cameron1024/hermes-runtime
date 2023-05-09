@@ -1,0 +1,28 @@
+/// The WASM interface definition for Hermes plugins
+default world hermes {
+
+  record cardano-block {
+    slot: u64,
+    hash: list<u8>,
+    raw-bytes: list<u8>,
+  }
+
+  import host: interface {
+
+    /// Send a message on the catalyst pubsub network
+    publish: func(msg: string)
+
+    /// Post a message to Twitter, using the API credentials stored in Hermes
+    tweet: func(msg: string)
+
+    /// Compute the `blake2b_256` hash of some bytes
+    blake-hash: func(bytes: list<u8>) -> list<u8>
+  }
+
+  /// A callback that will be called for any block Hermes gets from the node
+  export on-new-cardano: func(b: cardano-block)
+
+  /// A callback that will be called when a new ethereum json RPC event happens
+  export on-new-ethereum: func(rpc: string)
+}
+
